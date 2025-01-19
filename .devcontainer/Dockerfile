@@ -17,7 +17,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN apt-get update
 
 # some important utilities
-RUN apt-get install -y tree
+RUN apt-get install -y openssh-client tree
     
 # switch to user $USERNAME
 SHELL ["/bin/bash", "-c"]
