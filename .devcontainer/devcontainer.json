@@ -1,0 +1,30 @@
+{
+	"name": "wm-prognb-csharp-2025",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"features": {
+		"ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+	},
+	// https://stackoverflow.com/a/67803226/21655737
+	"mounts": [
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/myuser/.ssh,type=bind"
+	],
+	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/configit.sh ${containerWorkspaceFolder}",
+	"customizations": {
+		"vscode": {
+			"settings" : {"editor.rulers": [72, 79],
+			"editor.trimAutoWhitespace": true,
+			"files.autoSave": "off"
+		},
+			"extensions": [
+				"DavidAnson.vscode-markdownlint",
+				"mathematic.vscode-pdf",
+				"ms-azuretools.vscode-docker",
+				"mechatroner.rainbow-csv",
+				"streetsidesoftware.code-spell-checker",
+				"ms-dotnettools.csdevkit"
+			]
+		}
+	}
+}
