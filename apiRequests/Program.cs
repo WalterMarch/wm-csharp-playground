@@ -12,6 +12,19 @@ await ProcessRepositoriesAsync(client);
 
 static async Task ProcessRepositoriesAsync(HttpClient client)
 {
-    var json = await client.GetStringAsync("https://ok.surf/api/v1/news-section-names");
-    Console.Write(json);
+    var rawSectionNameString = await client.GetStringAsync("https://ok.surf/api/v1/news-section-names");
+    var sectionNameString = rawSectionNameString.Substring(1, rawSectionNameString.Length - 3);    
+    List<string> sectionNameList = sectionNameString.Split(',').ToList();   
+    List<string> cleanedSectionNameList = new List<string>();
+
+    foreach (string str in sectionNameList)
+    {
+        cleanedSectionNameList.Add(str.Replace("\"", ""));
+    }
+    
+    Random random = new Random();
+    int index = random.Next(cleanedSectionNameList.Count);
+    string randomSection = cleanedSectionNameList[index];
+
+    Console.WriteLine(randomSection);
 }
