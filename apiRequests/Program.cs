@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 using HttpClient client = new();
@@ -9,26 +11,14 @@ client.DefaultRequestHeaders.Accept.Add(
 
 string sectionResult = await ProcessRepositoriesAsync(client);
 
-List<string> sectionList = new List<string>
-{
-    sectionResult
-};
+string newsBody = "{\"sections\":[\"" + sectionResult + "\"]}";
 
-NewsBodyObject newsBodyObject = new NewsBodyObject
-{
-    sections = sectionList
-};
+HttpContent content = new StringContent(newsBody, Encoding.UTF8, "application/json");
+HttpResponseMessage response = await client.PostAsync("https://ok.surf/api/v1/news-section", content);
 
-NewsRequest newsRequest = new NewsRequest
-{
-    NewsUrl = "https://ok.surf/api/v1/news-section",
-    NewsMethod = "POST",
-    NewsBody = newsBodyObject,
-};
+string responseString = await response.Content.ReadAsStringAsync();
 
-Console.WriteLine(JsonSerializer.Serialize(newsRequest));
-
-// https://learn.microsoft.com/en-us/dotnet/csharp/tutorials/console-webapiclient
+Console.WriteLine(responseString);
 
 static async Task<string> ProcessRepositoriesAsync(HttpClient client)
 {
@@ -47,16 +37,4 @@ static async Task<string> ProcessRepositoriesAsync(HttpClient client)
     string randomSection = cleanedSectionNameList[index];
 
     return randomSection;
-}
-
-public class NewsRequest
-{
-    public string? NewsUrl { get; set; }
-    public string? NewsMethod { get; set; }
-    public NewsBodyObject? NewsBody { get; set; }
-}
-
-public class NewsBodyObject
-{
-    public List<string>? sections { get; set; }
 }
