@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using Newtonsoft.Json;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -17,13 +18,14 @@ HttpContent content = new StringContent(newsBody, Encoding.UTF8, "application/js
 HttpResponseMessage response = await client.PostAsync("https://ok.surf/api/v1/news-section", content);
 
 string responseString = await response.Content.ReadAsStringAsync();
+dynamic responseJson = JsonConvert.DeserializeObject(responseString);
 
-Console.WriteLine(responseString);
+Console.WriteLine(responseJson);
 
 static async Task<string> ProcessRepositoriesAsync(HttpClient client)
 {
-    var rawSectionNameString = await client.GetStringAsync("https://ok.surf/api/v1/news-section-names");
-    var sectionNameString = rawSectionNameString.Substring(1, rawSectionNameString.Length - 3);    
+    string rawSectionNameString = await client.GetStringAsync("https://ok.surf/api/v1/news-section-names");
+    string sectionNameString = rawSectionNameString.Substring(1, rawSectionNameString.Length - 3);    
     List<string> sectionNameList = sectionNameString.Split(',').ToList();   
     List<string> cleanedSectionNameList = new List<string>();
 
